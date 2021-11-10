@@ -20,7 +20,7 @@ Instructions to install the Azure Kinect SDK are from microsoft, copied here for
  sudo apt install libk4a1.4-dev
  sudo apt install libk4abt1.1-dev
 ```
-Note: requires OpenGL 4.4 and above,
+Note: requires OpenGL 4.4 and above, use ```sudo apt install nvidia-driver-455``` to install proper video card driver.
 
 When installing Azure Kinect Samples (Git submodule info):
 https://github.com/microsoft/Azure-Kinect-Sensor-SDK/issues/896
