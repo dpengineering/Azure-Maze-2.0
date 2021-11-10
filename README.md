@@ -13,25 +13,34 @@ Instructions to install the Azure Kinect SDK are from microsoft, copied here for
 
 1. Configure the Microsoft Package Repository, and install the Azure Kinect packages (tools, headers, and body tracking):
 ```
- curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+ curl -sSLhttps://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
  sudo apt-add-repository https://packages.microsoft.com/ubuntu/18.04/prod
  sudo apt-get update
  sudo apt install k4a-tools
- sudo apt install libk4a1.1-dev
- sudo apt install libk4abt1.0-dev
+ sudo apt install libk4a1.4-dev
+ sudo apt install libk4abt1.1-dev
 ```
 Note: requires OpenGL 4.4 and above,
 
 When installing Azure Kinect Samples (Git submodule info):
 https://github.com/microsoft/Azure-Kinect-Sensor-SDK/issues/896
 
-if device unavailable after compiling samples, run with sudo as rules not properly set.
+If your device is not being properly recognized by ```k4aviewer``` you may need to set the usb device rules.
+To properly set usb device rules:
 
 ```
-pip3 install kivy
+cd /etc/udev/rules.d && sudo wget https://raw.githubusercontent.com/microsoft/Azure-Kinect-Sensor-SDK/develop/scripts/99-k4a.rules
 ```
 
-2. For kivy, Pidev must be installed from https://github.com/dpengineering/RaspberryPiCommon
+To check that your Kinect is properly recognized, run
+```
+AzureKinectFirmwareTool -q
+```
+
+At this point, you should be able to connect to k4aviewer and see your Kinect in the device dropdown menu.
+```
+k4aviewer
+```
 
 
 ## Azure Kinect on Linux ##
