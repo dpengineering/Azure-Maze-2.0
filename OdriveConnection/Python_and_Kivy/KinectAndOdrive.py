@@ -25,6 +25,8 @@ odboard1.clear_errors()
 import sys
 import time
 
+import atexit
+
 import cv2
 from pykinect_azure.k4abt._k4abtTypes import K4ABT_JOINT_NAMES
 
@@ -57,6 +59,8 @@ upmove = False
 downmove = False
 enter = False
 middle = False
+delete = False
+level = False
 
 
 def global_variable_reset():
@@ -72,7 +76,6 @@ def global_variable_reset():
     time_start = time.time()
 
     # timer_update()
-
 
 # def timer_update():
 #     global seconds
@@ -220,30 +223,57 @@ def odrive_and_kinect_startup():
                 righthandy = close_body.joints[15].position.xyz.y
                 lefthandy = close_body.joints[8].position.xyz.y
 
-                if lefthandy < -400 and righthandy > -100:
-                    print("to the LEFT!")
+                shoulderleftx = close_body.joints[5].position.xyz.x
+                shoulderlefty = close_body.joints[5].position.xyz.y
+
+                shoulderrightx = close_body.joints[12].position.xyz.x
+                shoulderrighty = close_body.joints[12].position.xyz.y
+
+                handslope = (lefthandy - righthandy) / (lefthand - righthand)
+
+                #printing sloep
+
+#                 leftshoulderslope = (lefthandy-shoulderlefty)/(lefthand-shoulderleftx)
+#                 rightshoulderslope = (righthandy - shoulderrighty) / (righthand - shoulderrightx)
+#                 print(leftshoulderslope, rightshoulderslope)
+# #goldencode
+#                 if leftshoulderslope > 0.8: #or rightshoulderslope > 0.65:
+#                      ax.set_vel(-3)
+#                 #
+#                 if leftshoulderslope < -0.3: #or rightshoulderslope < -1.5:
+#                      ax.set_vel(3)
+#
+#                 if rightshoulderslope > 0.23:
+#                     ax.set_vel(-3)
+#
+#                 if rightshoulderslope < -1.2:
+#                     ax.set_vel(3)
+#
+#                 if -1.2 < rightshoulderslope < 0.23 and -0.3 < leftshoulderslope < 0.8:
+#                     ax.set_vel(0)
+
+                if -0.2 < handslope < 0.2:
+                    ax.set_vel(0)
+                if handslope > 0.2:
+                    ax.set_vel(-3)
+                if handslope < -0.2:
                     ax.set_vel(3)
 
-                if lefthandy > -100 and righthandy < -400:
-                    print("to the RIGHT!")
-                    ax.set_vel(-3)
-
-                if -400 < lefthandy < -100 and -400 < righthandy < -100:
-                    print("in the MIDDLE!")
-                    ax.set_vel(0)
-                    ay.set_vel(0)
-                    # stop if leave the frame
                 if righthand < -700 or righthand > 700:
-                    print("Stopping because righthand left the frame")
                     ax.set_vel(0)
 
                 if lefthand < -700 or lefthand > 700:
-                    print("Stopping because lefthand left the frame")
                     ax.set_vel(0)
 
-                # print("RightZ:", rightz)
-                # print("LeftY:", lefthandy)
-                # print("RightY:", righthandy)
+
+              #  if rightshoulderslope < 1.5 and leftshoulderslope < 0.08:
+                    #ax.set_vel(0)
+
+                # if leftshoulderslope < 0.9 and leftshoulderslope > 0.08:
+                #     ax.set_vel(0)
+                #
+                # if rightshoulderslope < 0.65 and rightshoulderslope > -1.5:
+                #     ax.set_vel(0)
 
             if cv2.waitKey(1) == ord('q'):
                 ax.set_vel(0)
@@ -278,81 +308,129 @@ def odrive_and_kinect_startup():
                 headx = close_body.joints[26].position.xyz.x
                 heady = close_body.joints[26].position.xyz.y
 
-                elbowry = close_body.joints[6].position.xyz.y
-                elbowly = close_body.joints[13].position.xyz.y
 
-                righthandz = close_body.joints[15].position.xyz.z
+
                 righthandx = close_body.joints[15].position.xyz.x
                 righthandy = close_body.joints[15].position.xyz.y
 
-                lefthandz = close_body.joints[8].position.xyz.z
+
                 lefthandy = close_body.joints[8].position.xyz.y
                 lefthandx = close_body.joints[8].position.xyz.x
 
+                rightz = close_body.joints[15].position.xyz.z
+                leftz = close_body.joints[8].position.xyz.z
+
+                righthand = close_body.joints[15].position.xyz.x
+                lefthand = close_body.joints[8].position.xyz.x
+
+                righthandy = close_body.joints[15].position.xyz.y
+                lefthandy = close_body.joints[8].position.xyz.y
+
+                shoulderleftx = close_body.joints[5].position.xyz.x
+                shoulderlefty = close_body.joints[5].position.xyz.y
+
+                shoulderrightx = close_body.joints[12].position.xyz.x
+                shoulderrighty = close_body.joints[12].position.xyz.y
+
+                leftelbowx = close_body.joints[6].position.xyz.x
+                leftelbowy = close_body.joints[6].position.xyz.y
+
+                rightelbowx = close_body.joints[6].position.xyz.x
+                rightelbowy = close_body.joints[6].position.xyz.y
+
+                pelvisx = close_body.joints[0].position.xyz.x
+                pelvisy = close_body.joints[0].position.xyz.y
+
+                kneelefty = close_body.joints[19].position.xyz.y
+
+                betweenpelvisandkneesy = (pelvisy + kneelefty) / 2
+
+                rightankley = close_body.joints[24].position.xyz.y
+
+
+                #printing sloep
+
+                handslope = (lefthandy-righthandy)/(lefthandx-righthandx)
+
+                leftshoulderslope = (lefthandy-shoulderlefty)/(lefthand-shoulderleftx)
+                rightshoulderslope = (righthandy - shoulderrighty) / (righthand - shoulderrightx)
+
                 tolerance = 100
-                # BEHOLD THE FINAL IF STATEMENT
+                toleranceleftright = 50
+
+                leftheadslope = (lefthandy - heady) / (lefthand - headx)
+                rightheadslope = (righthandy - heady) / (righthand - headx)
+                # BEHOLD THE FINAL IF STATEMENT#clicking
 
                 if lefthandy < (heady + tolerance) and lefthandy > (heady - tolerance) and lefthandx < (
                         headx + tolerance) and lefthandx > (headx - tolerance) or righthandy < (
                         heady + tolerance) and righthandy > (heady - tolerance) and righthandx < (
                         headx + tolerance) and righthandx > (headx - tolerance):
-                    #     # for i in range(30):
-                    #     #     print("left hand head clicked")
-                    #     #     print("LeftHandx",lefthandx)
-                    #     #     print("LeftHandy",lefthandy)
-                    #     #     print("RightHandx",righthandx)
-                    #     #     print("LeftHandy",righthandy)
-                    #     #     print("Headx",headx)
-                    #     #     print("Heady",heady)
-                    #     # print('00000000000000')
                     global click
                     click = True
 
-                # if righthandx < headx + 250:# and lefthandx > headx + tolerance:
-                #     # print('11111111111111')
-                #     global leftmove
-                #     leftmove = True
-                #
-                # if lefthandx > headx - tolerance:# and righthandx < headx - tolerance:
-                #     # print('2222222222222')
-                #     global rightmove
-                #     rightmove = True
+               #print(handslope)
 
+                # Down WIP
+                elif lefthandx - righthandx < tolerance and righthandx - lefthandx < tolerance and righthandy - lefthandy < tolerance:  # Put ya hands together y'all!
+                    global downmove
+                    # downmove = True
 
-                if lefthandy < -400 and righthandy > -100:
+                elif handslope > 0.2:
+                    global leftmove
+                    leftmove = True
+                elif handslope < -0.2:
                     global rightmove
                     rightmove = True
 
-                if lefthandy > -100 and righthandy < -400:
-                    global leftmove
-                    leftmove = True
+                elif rightz > headz and headz > leftz:
+                    global delete
+                    delete = True
 
-                if -400 < lefthandy < -100 and -400 < righthandy < -100:
-                    #print("in the middle")
-                    global middle
-                    middle = True
-                if lefthandy < heady - tolerance and righthandy < heady - tolerance:
-                    # print('333333333333333')
-                    global upmove
-                    upmove = True
+                elif righthand < -700 or righthand > 700:
+                    ax.set_vel(0)
 
-                if lefthandx - righthandx < tolerance and righthandx - lefthandx < tolerance and righthandy - lefthandy < tolerance:  # Put ya hands together y'all!
-                    global downmove
-                    downmove = True
+                elif lefthand < -700 or lefthand > 700:
+                    ax.set_vel(0)
 
-                    # sleep(1.5)
-                    # if lefthandy < elbowly - tolerance and righthandy < elbowry - tolerance:
-                    #     global enter
-                    #     enter = True
+                if -0.2 < handslope < 0.2:
+                    # global middle
+                    # middle = True
+                    # global level
+                    # level = True
+                    pass
 
-                # rightmove = False
-                # click = False
-                # leftmove = False
+                # HA, WE CAN USE SLOPES HERE
+
+                # print(rightheadslopez)
+
+
+
+                # if -0.14 < leftheadslope < .25:
+                #     global leftmove
+                #     leftmove = True
+                #
+                # if -0.32 < rightheadslope < .12:
+                #     global rightmove
+                #     rightmove = True
+                #
+                #
+                # # The bleh code
+                #
+                # if leftheadslope <= -0.8 and rightheadslope >= 0.8:
+                #     global upmove
+                #     upmove = True
+                #
+                # if leftheadslope >= 1.7 and rightheadslope <= -1.7:
+                #     global downmove
+                #     downmove = True
+
 
             if cv2.waitKey(1) == ord('q'):
                 ax.set_vel(0)
                 ax.idle()
                 break
+
 
         if KinectIsOn:
             KeyboardIsOn = False
@@ -365,8 +443,8 @@ def odrive_and_kinect_startup():
         # print(KinectIsOn)
         # print((KeyboardIsOn))
 
-        _k4a.k4a_capture_release(capture.handle())
-        _k4abt.k4abt_frame_release(body_frame.handle())
+        # _k4a.k4a_capture_release(capture.handle())
+        # _k4abt.k4abt_frame_release(body_frame.handle())
 
 
 if __name__ == '__main__':
@@ -482,8 +560,8 @@ if __name__ == '__main__':
                 print("LeftY:", lefthandy)
                 print("RightY:", righthandy)
 
-            _k4a.k4a_capture_release(capture.handle())
-            _k4abt.k4abt_frame_release(body_frame.handle())
+            # _k4a.k4a_capture_release(capture.handle())
+            # _k4abt.k4abt_frame_release(body_frame.handle())
 
             if cv2.waitKey(1) == ord('q'):
                 ax.set_vel(0)
@@ -498,7 +576,7 @@ if __name__ == '__main__':
                 dump_errors(odboard1)
                 odboard1.clear_errors()
                 sleep(3)
-                Thread(target=Kivy_Update).start()
+                #Thread(target=Kivy_Update).start()
                 sleep(1)
                 KinectIsOn = False
 

@@ -79,6 +79,8 @@ class MainScreen(Screen):
     x_check = 0
     y_check = 0
 
+    confidencecounter = 0
+
     def CursorCheck(self):
         print("CursorCheck")
         self.locationrecorder = 'None'
@@ -99,35 +101,89 @@ class MainScreen(Screen):
                 x_offset = 0
                 y_offset += y_spacing
 
-        self.enter.pos_hint = {"x": .44, "y": .1}
-
+        self.enter.pos_hint = {"x": 0.1, "y": .1}
+        leftlimit = 0
+        rightlimit = 0
         self.enterpressed = False
         while self.enterpressed == False:
+            if self.square.y > 321:
+                self.square.y -= 14 * 6.5
+            if self.square.y < 48 + 6.5:
+                self.square.x = 87.42399999999998
+                self.square.y = 48.0
+
             if KinectAndOdrive.leftmove:
-                print('leftmove')
-                for i in range(14):
-                    self.square.x -= 5.7
-                if self.square.x < 0.00953:
-                    for i in range(14):
-                        self.square.x += 5.7
-                if self.square.y < 48 + 6.5:
-                    for i in range(14):
-                        self.square.x += 5.7
+                self.confidencecounter += 1
+                if self.confidencecounter > 2:
+                    print('leftmove')
+                    self.square.x -= 14*5.7
+                    if self.square.x < 0.00953:
+                        if leftlimit == 0:
+                            self.square.x += 14 * 5.7
+                        else:
+                            self.square.y += 14 * 6.5
+                            self.square.x += 14 * 5.7 * 9
+                            rightlimit += 1
+                            leftlimit -= 1
+                    if self.square.y < 48 + 6.5:
+                        self.square.y += 14*6.5
+                    self.confidencecounter = 0
                 self.locationrecorder = 'l'
                 KinectAndOdrive.leftmove = False
+                sleep(0.5)
+
 
             if KinectAndOdrive.rightmove:
-                print('right move')
-                for x in range(14):
-                    self.square.x += 5.7
-                if self.square.x > (725.824 + 5.7):
-                    for x in range(14):
-                        self.square.x -= 5.7
-                if self.square.y < 48 + 6.5:
-                    for i in range(14):
-                        self.square.x -= 5.7
+                self.confidencecounter += 1
+                if self.confidencecounter > 2:
+                    print('right move')
+                    self.square.x += 14*5.7
+                    if self.square.x > (725.824 + 5.7):
+                        if rightlimit == 1:
+                            self.square.x -= 14*5.7
+                        else:
+                            self.square.y -= 14 * 6.5
+                            self.square.x -= 14 * 5.7 * 10
+                            rightlimit -= 1
+                            leftlimit += 1
+                    if self.square.y < 48 + 6.5:
+                        self.square.x = 87.42399999999998
+                        self.square.y = 48.0
+                    self.confidencecounter = 0
                 self.locationrecorder = 'r'
                 KinectAndOdrive.rightmove = False
+                sleep(0.5)
+
+
+
+            if KinectAndOdrive.upmove:
+                print('up move')
+                self.square.y += 14*6.5
+                if self.square.y > 321:
+                    self.square.y -= 14*6.5
+                self.locationrecorder = 'u'
+                KinectAndOdrive.upmove = False
+                sleep(0.5)
+
+            # Down WIP
+            if KinectAndOdrive.downmove:
+                print('down move')
+                self.square.y -= 14*6.5
+                # if rightlimit == 2:
+                #     self.square.y = .1
+                #     self.square.x = .44
+                # else:
+                #     self.square.y -= 14 * 6.5
+                if self.square.y < 48:
+                    self.square.y += 14*6.5
+                    self.square.x = 326.824
+                if self.square.y < 48 + 6.5:
+                    self.square.x = 326.824
+
+                self.locationrecorder = 'd'
+                KinectAndOdrive.downmove = False
+                sleep(0.5)
+
             if KinectAndOdrive.click:
                 try:
                     print('clicked')
@@ -149,44 +205,30 @@ class MainScreen(Screen):
 
                 self.locationrecorder = 'c'
                 KinectAndOdrive.click = False
-
-            if KinectAndOdrive.upmove:
-                print('up move')
-                for y in range(14):
-                    self.square.y += 6.5
-                if self.square.y > 321:
-                    for i in range(14):
-                        self.square.y -= 6.5
-                self.locationrecorder = 'u'
-                KinectAndOdrive.upmove = False
-
-            if KinectAndOdrive.downmove:
-                print('down move')
-                for y in range(14):
-                    self.square.y -= 6.5
-                    if self.square.y < 48:
-                        self.square.y += 6.5
-                        self.square.x = 326.824
-                if self.square.y < 48 + 6.5:
-                    self.square.x = 326.824
-
-                self.locationrecorder = 'd'
-                KinectAndOdrive.downmove = False
+                sleep(0.5)
 
             if KinectAndOdrive.middle:
                 if self.locationrecorder == 'l':
-                    for i in range(14):
-                        self.square.x += 5.7
+                    self.square.x += 14*5.7
                 if self.locationrecorder == 'r':
-                    for x in range(14):
-                        self.square.x -= 5.7
+                    self.square.x -= 14*5.7
                 if self.locationrecorder == 'u':
-                    for i in range(14):
-                        self.square.y -= 6.5
+                    self.square.y -= 14*6.5
+                if self.locationrecorder == 'd':
+                    self.square.y += 14 * 6.5
+
                 self.locationrecorder = '00000000'
                 KinectAndOdrive.middle = False
+                sleep(0.2)
 
-            sleep(0.5)
+            if KinectAndOdrive.delete:
+                self.DELETE_Key_Update()
+                sleep(1)
+                KinectAndOdrive.delete = False
+
+
+            sleep(0.2)
+
             # if KinectAndOdrive.enter:
             #     print('enter')
             #
@@ -208,6 +250,7 @@ class MainScreen(Screen):
             #         else:
             #             for i in range(14):
             #                 print('enter')
+
 
     # making a file that appends each new name when it is entered:
 
@@ -462,6 +505,7 @@ class MainScreen(Screen):
             file.close()
             sleep(0.4)
             SCREEN_MANAGER.current = WAIT_SCREEN_NAME
+
 
     def DELETE_Key_Update(self):  # this WORKS omg
 
