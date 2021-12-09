@@ -9,16 +9,20 @@
 100000 Joe
 100000 Joe
 0 braeden
-10 cesar
-44 zzzeyynn
-1 kkeev*n
-1 uutrrrrys*-ryan
-2 ryab
-1 jon
-1 you
-1 gho
-1 john
-54 kai
-2 yggdrasil
-54 Bob
-1
+101111 cesar
+441111 zzzeyynn
+11111 kkeev*n
+1111111 uutrrrrys*-ryan
+211111 ryab
+11111111 jon
+111111 you
+11111111 gho
+111111 john
+541111111 kai
+211111111 yggdrasil
+5411111111 Bob
+23434444 zl
+5444440 devin
+544444 Bob
+144444 daryl
+2

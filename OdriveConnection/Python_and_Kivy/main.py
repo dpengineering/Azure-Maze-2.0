@@ -116,7 +116,10 @@ class MainScreen(Screen):
                 self.square.x = 87.42399999999998
                 self.square.y = 48.0
 
-            sleeptime = KinectAndOdrive.takeheadz / 1700 - .3
+            #sleeptime = KinectAndOdrive.takeheadz / 1700 - .3
+
+            sleeptime = 200/KinectAndOdrive.takeheadz
+            print(sleeptime)
             #Don't stand directly in front of camera, else it'll error due to negative. Can't trip this error idk
 
 
