@@ -61,6 +61,7 @@ enter = False
 middle = False
 delete = False
 level = False
+takeheadz = 1400
 
 
 def global_variable_reset():
@@ -305,6 +306,7 @@ def odrive_and_kinect_startup():
 
             if close_body != None:
                 headz = close_body.joints[26].position.xyz.z
+
                 headx = close_body.joints[26].position.xyz.x
                 heady = close_body.joints[26].position.xyz.y
 
@@ -361,6 +363,9 @@ def odrive_and_kinect_startup():
                 leftheadslope = (lefthandy - heady) / (lefthand - headx)
                 rightheadslope = (righthandy - heady) / (righthand - headx)
                 # BEHOLD THE FINAL IF STATEMENT#clicking
+                # print(headz)
+                global takeheadz
+                # print(takeheadz)
 
                 if lefthandy < (heady + tolerance) and lefthandy > (heady - tolerance) and lefthandx < (
                         headx + tolerance) and lefthandx > (headx - tolerance) or righthandy < (
@@ -369,23 +374,28 @@ def odrive_and_kinect_startup():
                     global click
                     click = True
 
-               #print(handslope)
 
-                # Down WIP
+
+
                 elif lefthandx - righthandx < tolerance and righthandx - lefthandx < tolerance and righthandy - lefthandy < tolerance:  # Put ya hands together y'all!
                     global downmove
                     # downmove = True
 
                 elif handslope > 0.2:
                     global leftmove
+                    takeheadz = headz
                     leftmove = True
+
                 elif handslope < -0.2:
                     global rightmove
+
+                    takeheadz = headz
                     rightmove = True
 
-                elif rightz > headz and headz > leftz:
+                elif rightz > headz + tolerance and leftz > headz + tolerance:
                     global delete
                     delete = True
+
 
                 elif righthand < -700 or righthand > 700:
                     ax.set_vel(0)
@@ -399,8 +409,6 @@ def odrive_and_kinect_startup():
                     # global level
                     # level = True
                     pass
-
-                # HA, WE CAN USE SLOPES HERE
 
                 # print(rightheadslopez)
 

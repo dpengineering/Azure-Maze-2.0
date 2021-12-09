@@ -83,6 +83,10 @@ class MainScreen(Screen):
 
     def CursorCheck(self):
         print("CursorCheck")
+
+
+
+
         self.locationrecorder = 'None'
         MainObjectList = [self.q1, self.w1, self.e1, self.r1, self.t1, self.y1, self.u1, self.i1, self.o1, self.p1,
                           self.a1, self.s1, self.d1, self.f1, self.g1, self.h1, self.j1, self.k1, self.l1, self.space,
@@ -112,10 +116,14 @@ class MainScreen(Screen):
                 self.square.x = 87.42399999999998
                 self.square.y = 48.0
 
+            sleeptime = KinectAndOdrive.takeheadz / 1700 - .3
+            #Don't stand directly in front of camera, else it'll error due to negative. Can't trip this error idk
+
+
             if KinectAndOdrive.leftmove:
                 self.confidencecounter += 1
                 if self.confidencecounter > 2:
-                    print('leftmove')
+                    # print('leftmove')
                     self.square.x -= 14*5.7
                     if self.square.x < 0.00953:
                         if leftlimit == 0:
@@ -130,13 +138,16 @@ class MainScreen(Screen):
                     self.confidencecounter = 0
                 self.locationrecorder = 'l'
                 KinectAndOdrive.leftmove = False
-                sleep(0.5)
+                print(KinectAndOdrive.takeheadz)
+
+                sleep(sleeptime)
 
 
             if KinectAndOdrive.rightmove:
                 self.confidencecounter += 1
                 if self.confidencecounter > 2:
-                    print('right move')
+
+                    # print('right move')
                     self.square.x += 14*5.7
                     if self.square.x > (725.824 + 5.7):
                         if rightlimit == 1:
@@ -152,7 +163,9 @@ class MainScreen(Screen):
                     self.confidencecounter = 0
                 self.locationrecorder = 'r'
                 KinectAndOdrive.rightmove = False
-                sleep(0.5)
+
+                sleep(sleeptime)
+                # sleep(0.25)
 
 
 
@@ -222,9 +235,15 @@ class MainScreen(Screen):
                 sleep(0.2)
 
             if KinectAndOdrive.delete:
-                self.DELETE_Key_Update()
-                sleep(1)
+                self.confidencecounter += 1
+                sleep(0.2)
+                if self.confidencecounter > 4:
+                    print('deleting')
+                    self.DELETE_Key_Update()
+                    sleep(0.2)
+                    self.confidencecounter = 0
                 KinectAndOdrive.delete = False
+                sleep(0.25)
 
 
             sleep(0.2)
