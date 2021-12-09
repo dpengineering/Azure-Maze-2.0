@@ -47,33 +47,60 @@
     Label:
         id: click_label
         text: "Click!"
-        pos_hint:{"x":5.001, "y": 5.14}
+        font_size: 28
+        pos_hint:{"x":.001, "y": .145}
         color: 0, 0, 0, 1
 
     Label:
         id: right_label
         text: "Right!"
-        pos_hint:{"x":5.34,"y": 5.32}
+        font_size: 28
+        pos_hint:{"x":.3,"y": .32}
+        color: 0, 0, 0, 1
+
+    Label:
+        id: del_label
+        text: "Delete!"
+        font_size: 28
+        pos_hint:{"x":.38,"y": -.33}
+        color: 0, 0, 0, 1
+    Label:
+        id: del_label2
+        text: "Hands Next To\n and Behind Back"
+        font_size: 20
+        pos_hint:{"x":.38,"y": -.39}
         color: 0, 0, 0, 1
 
     Label:
         id: left_label
         text: "Left!"
-        pos_hint:{"x":-5.35,"y": 5.32}
+        font_size: 28
+        pos_hint:{"x":-.32,"y": .32}
         color: 0, 0, 0, 1
 
+    ImageButton:
+        id: MelinaClick
+        pos_hint:{"x":.4, "y": .64288584585845845}
+        size: 150,160
+        source: 'Click.png'
 
-    Label:
-        id: up_label
-        text: "Up!"
-        pos_hint:{"x":-5.35,"y": -5.32}
-        color: 0, 0, 0, 1
+    ImageButton:
+        id: KevinLeft
+        pos_hint:{"x":0, "y": .64} #USE π FOR MAKING ERRORS
+        size: 150,190
+        source: 'Left.png'
 
-    Label:
-        id:down_label
-        text: "Down!"
-        pos_hint:{"x":5.32,"y": -5.32}
-        color: 0, 0, 0, 1
+    ImageButton:
+        id: NikhilDelete
+        pos_hint:{"x":0.6,"y": -0.07}
+        size: 170,210
+        source: 'Delete.png'
+
+    ImageButton:
+        id: JohnRight
+        pos_hint:{"x":0.823, "y": .64}
+        size: 160, 190
+        source: 'Right.png'
 
     ImageButton:
         id: square
@@ -85,56 +112,11 @@
         source: 'square.jpg'
         #on_press:
 
-    ImageButton:
-        id: up_movement
-        text: 'up_movement'
-        font_size: 3
-        pos_hint:{"x":5.0,"y": 0}
-        size: 120,200
-        source: 'Up_Motion.png'
-        #on_press:
-
-    ImageButton:
-        id: down_movement
-        text: 'down_movement'
-        font_size: 3
-        pos_hint:{"x":5.8,"y": 0}
-        size: 120,200
-        source: 'Clappibgboi.png'
-        #on_press:
-
-    ImageButton:
-        id: left_movement
-        text: 'left_movement'
-        font_size: 3
-        pos_hint:{"x":5.0,"y": 0.65}
-        size: 160,270
-        source: 'Left.png'
-        #on_press:
-
-    ImageButton:
-        id: click
-        text: 'click'
-        font_size: 3
-        pos_hint:{"x":5.425,"y": 0.61}
-        size: 130,230
-        source: 'Peekaboo.png'
-        #on_press:
-
-
-    ImageButton:
-        id: right_movement
-        text: 'right'
-        font_size: 3
-        pos_hint:{"x":5.8,"y": 0.63}
-        size: 180,290
-        source: 'Right.png'
-        #on_press:
 
     Label:
         id:timer
         text: "Enter Your Name: "
-        pos_hint:{"x":0,"y": .4}
+        pos_hint:{"x":0,"y": .45}
         color: 0, 0, 0, 1
         font_size: 50
 

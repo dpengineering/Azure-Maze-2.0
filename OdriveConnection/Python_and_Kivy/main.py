@@ -101,6 +101,7 @@ class MainScreen(Screen):
             btn.pos_hint = {"x": .02 + x_offset, "y": .55 + y_offset}
             button_count += 1
             x_offset += x_spacing
+            btn.color = 0,0,0,1
             if button_count % 10 == 0:
                 x_offset = 0
                 y_offset += y_spacing
@@ -213,9 +214,9 @@ class MainScreen(Screen):
                         if self.square.collide_widget(thing):
                             print(thing.text)
                             thing.trigger_action(duration=0.1)
-                            thing.color = (1, 1, 1, 1)
+                            thing.color = (1, 1, 1, 0.89)
                             sleep(0.2)
-                            thing.color = (0, 1, 0, 1)
+                            thing.color = (0, 0, 0, 1)
                 except Exception as e:
                     print(e, 'in click, not a button')
 
