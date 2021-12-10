@@ -101,7 +101,7 @@ class MainScreen(Screen):
             btn.pos_hint = {"x": .02 + x_offset, "y": .55 + y_offset}
             button_count += 1
             x_offset += x_spacing
-            btn.color = 0,0,0,1
+            btn.color = "darkmagenta"
             if button_count % 10 == 0:
                 x_offset = 0
                 y_offset += y_spacing
@@ -202,27 +202,30 @@ class MainScreen(Screen):
                 sleep(0.5)
 
             if KinectAndOdrive.click:
-                try:
-                    print('clicked')
-                    print(
-                        '--------------------------------------------------------------------------------------------')
-                    print('x:', self.square.x)
-                    print('y:', self.square.y)
-                    print(
-                        '--------------------------------------------------------------------------------------------')
-                    for thing in MainObjectList:
-                        if self.square.collide_widget(thing):
-                            print(thing.text)
-                            thing.trigger_action(duration=0.1)
-                            thing.color = (1, 1, 1, 0.89)
-                            sleep(0.2)
-                            thing.color = (0, 0, 0, 1)
-                except Exception as e:
-                    print(e, 'in click, not a button')
+                self.confidencecounter += 1
+                if self.confidencecounter > 3:
+                    try:
+                        print('clicked')
+                        print(
+                            '--------------------------------------------------------------------------------------------')
+                        print('x:', self.square.x)
+                        print('y:', self.square.y)
+                        print(
+                            '--------------------------------------------------------------------------------------------')
+                        for thing in MainObjectList:
+                            if self.square.collide_widget(thing):
+                                print(thing.text)
+                                thing.trigger_action(duration=0.1)
+                                thing.color = (1, 1, 1, 0.89)
+                                sleep(0.2)
+                                thing.color = "darkmagenta"
+                    except Exception as e:
+                        print(e, 'in click, not a button')
 
-                self.locationrecorder = 'c'
+                    self.locationrecorder = 'c'
+                    self.confidencecounter = 0
                 KinectAndOdrive.click = False
-                sleep(0.5)
+                sleep(0.2)
 
             if KinectAndOdrive.middle:
                 if self.locationrecorder == 'l':
