@@ -1,7 +1,7 @@
 import random
 import time
 
-import keyboard
+
 
 import KinectAndOdrive
 # os.environ['DISPLAY'] = ":0.0"
@@ -19,11 +19,21 @@ from pidev.kivy import ImageButton
 from pidev.kivy.selfupdatinglabel import SelfUpdatingLabel
 from pidev.MixPanel import MixPanel
 
+#EMAIL< IFBREAKCODE< DELETETHIS
+from EmailModule import checkforEmail
+
 MAIN_SCREEN_NAME = 'main'
 TIMER_SCREEN_NAME = 'TimerScreen'
 WAIT_SCREEN_NAME = 'WaitScreen'
 SCREEN_MANAGER = ScreenManager()
 
+toEmail = []
+
+
+def kineticmail():
+    while True:
+        checkforEmail("kineticmaze@gmail.com", "kineticmaze7266!", "score", "Top Scorers" + " @" + str(random.random()), str(toEmail), False)
+        sleep(1)
 
 class KinectGUI(App):
     # class that runs the gui
@@ -120,8 +130,8 @@ class MainScreen(Screen):
             #sleeptime = KinectAndOdrive.takeheadz / 1700 - .3
 
             sleeptime = 200/KinectAndOdrive.takeheadz
-            print(sleeptime)
-            #Don't stand directly in front of camera, else it'll error due to negative. Can't trip this error idk
+            #print(sleeptime)
+            #Don't stand directly in front of camera, else it'll error due to negative. Can't trip this error idk - self resolve>?
 
 
             if KinectAndOdrive.leftmove:
@@ -142,10 +152,10 @@ class MainScreen(Screen):
                     self.confidencecounter = 0
                 self.locationrecorder = 'l'
                 KinectAndOdrive.leftmove = False
-                print(KinectAndOdrive.takeheadz)
+                #print(KinectAndOdrive.takeheadz)
 
                 sleep(sleeptime)
-
+                #https: // stackoverflow.com / questions / 33933720 / how - to - delete - all - comment - lines - in -idea ---000something like this for last revision
 
             if KinectAndOdrive.rightmove:
                 self.confidencecounter += 1
@@ -292,6 +302,7 @@ class MainScreen(Screen):
         while deletion < 30:
             self.DELETE_Key_Update()
             self.deletion += 1
+
 
     counter = 0
 
@@ -590,6 +601,14 @@ class WaitScreen(Screen):
         print("Pairs Before:", pairs)
         pairs.sort(key=lambda pair: int(pair[0]))
         print("Pairs After:", pairs)
+        pairsList = dict(pairs)
+        global toEmail
+        with open("logging.txt","w") as f:
+            f.truncate(0)
+            for i in pairsList:
+                f.write(pairsList[i]+"\n")
+                toEmail.append(pairsList[i] + "\n")
+                print(toEmail)
 
         # string = ""
         # for element in pairs:
@@ -677,6 +696,8 @@ class WaitScreen(Screen):
         sleep(10)
         print("Switch screen")
         KinectAndOdrive.KinectIsOn = True
+
+
         SCREEN_MANAGER.current = TIMER_SCREEN_NAME
 
 
@@ -719,11 +740,13 @@ class TimerScreen(Screen):
                 file = open('storage.txt', 'a')
                 file.write('\n' + str(seconds) + '')
                 file.close()
+
                 SCREEN_MANAGER.current = MAIN_SCREEN_NAME
                 break
 
 
 def everything_start():
+
     KinectAndOdrive.odrive_and_kinect_startup()
 
 
@@ -739,6 +762,7 @@ SCREEN_MANAGER.add_widget(WaitScreen(name=WAIT_SCREEN_NAME))
 
 if __name__ == '__main__':
     Thread(target=everything_start).start()
+    Thread(target=kineticmail).start()
     KinectGUI().run()
 
 # stackeeeeeexchange
