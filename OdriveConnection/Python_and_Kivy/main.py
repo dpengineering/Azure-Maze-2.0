@@ -42,7 +42,7 @@ class KinectGUI(App):
         return SCREEN_MANAGER
 
 
-Window.clearcolor = (1, 1, 1, 1)  # sets the window color to white
+Window.clearcolor = (.5, .5, .5, 0.1)  # sets the window color to white
 
 
 class MainScreen(Screen):
@@ -93,6 +93,7 @@ class MainScreen(Screen):
 
     def CursorCheck(self):
         print("CursorCheck")
+        Thread(target=self.change_enter_name_color).start()
 
 
 
@@ -111,7 +112,7 @@ class MainScreen(Screen):
             btn.pos_hint = {"x": .02 + x_offset, "y": .55 + y_offset}
             button_count += 1
             x_offset += x_spacing
-            btn.color = "darkmagenta"
+            btn.color = "lightblue"
             if button_count % 10 == 0:
                 x_offset = 0
                 y_offset += y_spacing
@@ -228,7 +229,7 @@ class MainScreen(Screen):
                                 thing.trigger_action(duration=0.1)
                                 thing.color = (1, 1, 1, 0.89)
                                 sleep(0.2)
-                                thing.color = "darkmagenta"
+                                thing.color = "lightblue"
                     except Exception as e:
                         print(e, 'in click, not a button')
 
@@ -307,12 +308,66 @@ class MainScreen(Screen):
     counter = 0
 
     def resetimername(self):
+
+
         Thread(target=self.CursorCheck).start()
+
         # self.square.pos_hint = {"x":.02,"y": .55}
         for i in range(30):
             self.DELETE_Key_Update()
         self.timer.text = "ENTER YOUR NAME: "
         self.keyboard_movement_update()
+
+    def change_enter_name_color(self):
+        r = 0
+        sleeptime1 = 0.1
+        increment = 0.05
+        switch = 0
+        while True:
+            if switch == 0:
+                print(r)
+                r += increment
+                self.timer.color = r,0,0,1
+                sleep(sleeptime1)
+                if r > 0.9:
+                    switch = 1
+            if switch == 1:
+                print(r)
+                r -= increment
+                self.timer.color = r,0,0,1
+                sleep(sleeptime1)
+                if r < 0.1:
+                    switch = 2
+            if switch == 2:
+                print(r)
+                r += increment
+                self.timer.color = 0,r,0,1
+                sleep(sleeptime1)
+                if r > 0.9:
+                    switch = 3
+            if switch == 3:
+                print(r)
+                r -= increment
+                self.timer.color = 0,r,0,1
+                sleep(sleeptime1)
+                if r < 0.1:
+                    switch = 4
+            if switch == 4:
+                print(r)
+                r += increment
+                self.timer.color = 0,0,r,1
+                sleep(sleeptime1)
+                if r > 0.9:
+                    switch = 5
+            if switch == 5:
+                print(r)
+                r -= increment
+                self.timer.color = 0,0,r,1
+                sleep(sleeptime1)
+                if r < 0.1:
+                    switch = 0
+            if self.enterpressed:
+                break
 
     def keyboard_movement_update(self):  # call to KinectAndOdrive?
         print('')
@@ -712,6 +767,7 @@ class TimerScreen(Screen):
 
     def timer_label_update_thread(self):
         Thread(target=self.timer_label_update).start()
+        Thread(target=self.change_enter_name_color).start()
 
     def timer_label_update(self):
 
@@ -740,9 +796,61 @@ class TimerScreen(Screen):
                 file = open('storage.txt', 'a')
                 file.write('\n' + str(seconds) + '')
                 file.close()
-
                 SCREEN_MANAGER.current = MAIN_SCREEN_NAME
                 break
+
+    def change_enter_name_color(self):
+        r = 0
+        sleeptime1 = 0.1
+        increment = 0.02
+        switch = 0
+        while True:
+            if switch == 0:
+                print(r)
+                r += increment
+                self.timer.color = r,0,0,1
+                sleep(sleeptime1)
+                if r > 0.9:
+                    switch = 1
+            if switch == 1:
+                print(r)
+                r -= increment
+                self.timer.color = r,0,0,1
+                sleep(sleeptime1)
+                if r < 0.1:
+                    switch = 2
+            if switch == 2:
+                print(r)
+                r += increment
+                self.timer.color = 0,r,0,1
+                sleep(sleeptime1)
+                if r > 0.9:
+                    switch = 3
+            if switch == 3:
+                print(r)
+                r -= increment
+                self.timer.color = 0,r,0,1
+                sleep(sleeptime1)
+                if r < 0.1:
+                    switch = 4
+            if switch == 4:
+                print(r)
+                r += increment
+                self.timer.color = 0,0,r,1
+                sleep(sleeptime1)
+                if r > 0.9:
+                    switch = 5
+            if switch == 5:
+                print(r)
+                r -= increment
+                self.timer.color = 0,0,r,1
+                sleep(sleeptime1)
+                if r < 0.1:
+                    switch = 0
+            if KinectAndOdrive.KinectIsOn == False:
+                break
+
+
 
 
 def everything_start():
