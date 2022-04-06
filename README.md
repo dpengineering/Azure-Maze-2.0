@@ -44,7 +44,7 @@ Joints: x,y,z, measured in mm from the lens of the camera.
 
 ## How to Run ##
 
-TODO
+Monkey See, Monkey Do, Monkey Say HooHoo
 
 
 
